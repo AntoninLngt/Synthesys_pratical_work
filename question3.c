@@ -13,6 +13,7 @@ int main() {
     write(STDOUT_FILENO, message_Welcome, message_Welcome_length);
 
     while (1) {
+        int end;
         write(STDOUT_FILENO, "enseash % ", strlen ("enseash % "));
         fgets(user_input, sizeof(user_input), stdin); // To save the anwers from the user
         user_input[strcspn(user_input, "\n")] = '\0'; // To suppress the caracter \n
@@ -25,11 +26,18 @@ int main() {
             break;  // Leave the while loop to be able to quit the shell
         }
 
+        else if ((end = getchar()) == EOF) {
+            const char *message_Exit = "Bye bye...\n";
+            size_t message_Exit_length = strlen(message_Exit); 
+            write(STDOUT_FILENO, message_Exit, message_Exit_length);
+            break;  // Leave the while loop to be able to quit the shell
+        }
+
         else if (strcmp(user_input, "") == 0){
         }
         else {
                 pid_t pid = fork();
-                if (pid == -1) { // Error in the creation in the son process
+                if (pid == -1) { // If error in the creation in the son process
                 perror("fork");
                 exit(EXIT_FAILURE);
                 } 
@@ -43,6 +51,7 @@ int main() {
                     waitpid(pid, NULL, 0);
                 }
             }
+            putchar(end);
         }
     return 0;
 }
