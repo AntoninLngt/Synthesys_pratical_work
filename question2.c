@@ -15,7 +15,7 @@ int main() {
     while (1) {
         write(STDOUT_FILENO, "enseash % ", strlen ("enseash % "));
         fgets(user_input, sizeof(user_input), stdin); // To save the anwers from the user
-        user_input[strcspn(user_input, "\n")] = '\0'; // To suppress the caractère \n
+        user_input[strcspn(user_input, "\n")] = '\0'; // To suppress the caracter \n
 
         if (strcmp(user_input, "exit") == 0) {
             break;  // Leave the while loop to be able to quit the shell
@@ -29,8 +29,9 @@ int main() {
             time_t now;
             time(&now); // To get the actual time
             struct tm *local_time= localtime(&now);
-            char time_str[90]; // Vous pouvez ajuster la taille en fonction de vos besoins
-            strftime(time_str, sizeof(time_str), "%Y-%m-%d %H:%M:%S", local_time);
+            char time_str[100]; //default value that we can change
+            strftime(time_str, sizeof(time_str), "%Y-%m-%d %H:%M:%S", local_time); 
+            // function that gives the time in a readable way
 
             write(STDOUT_FILENO, time_str , strlen(time_str)); // View the date
             write(STDOUT_FILENO, "\n", strlen("\n")); // Line break
