@@ -32,8 +32,10 @@ int main() {
             time_t now;
             time(&now); // To get the actual time
             struct tm *local_time= localtime(&now);
-            char time_str[90]; // Vous pouvez ajuster la taille en fonction de vos besoins
+            char time_str[90]; //default value that we can change
             strftime(time_str, sizeof(time_str), "%Y-%m-%d %H:%M:%S", local_time);
+            // function that gives the time in a readable way
+
 
             write(STDOUT_FILENO, time_str , strlen(time_str)); // View the date
             write(STDOUT_FILENO, "\n", strlen("\n")); // Line break
