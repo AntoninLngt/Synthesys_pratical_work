@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include <time.h>
+#include <sys/wait.h>
 
 #define MAX_INPUT_SIZE 256
 
@@ -13,31 +13,56 @@ int main() {
     write(STDOUT_FILENO, message_Welcome, message_Welcome_length);
 
     while (1) {
+        int end;
         write(STDOUT_FILENO, "enseash % ", strlen ("enseash % "));
         fgets(user_input, sizeof(user_input), stdin); // To save the anwers from the user
-        user_input[strcspn(user_input, "\n")] = '\0'; // To suppress the caractère \n
-
+        user_input[strcspn(user_input, "\n")] = '\0'; // To suppress the caracter \n
+        
+        
         if (strcmp(user_input, "exit") == 0) {
-            const char *message_exit="Bye bye ...\n";
-            size_t message_exit_length = strlen(message_exit);
-            write(STDOUT_FILENO, message_exit, message_exit_length);
+            const char *message_Exit = "Bye bye...\n";
+            size_t message_Exit_length = strlen(message_Exit); 
+            write(STDOUT_FILENO, message_Exit, message_Exit_length);
             break;  // Leave the while loop to be able to quit the shell
         }
-        else if (strcmp(user_input, "fortune") == 0){
-            const char *message_fortune="Today is what happened to yesterday.\n";
-            size_t message_fortune_length = strlen(message_fortune);
-            write(STDOUT_FILENO, message_fortune, message_fortune_length);
-        }
-        else if (strcmp(user_input, "date") == 0){
-            time_t now;
-            time(&now); // To get the actual time
-            struct tm *local_time= localtime(&now);
-            char time_str[90]; // Vous pouvez ajuster la taille en fonction de vos besoins
-            strftime(time_str, sizeof(time_str), "%Y-%m-%d %H:%M:%S", local_time);
 
-            write(STDOUT_FILENO, time_str , strlen(time_str)); // View the date
-            write(STDOUT_FILENO, "\n", strlen("\n")); // Line break
+        else if ((end = getchar()) == EOF) {
+            const char *message_Exit = "Bye bye...\n";
+            size_t message_Exit_length = strlen(message_Exit); 
+            write(STDOUT_FILENO, message_Exit, message_Exit_length);
+            break;  // Leave the while loop to be able to quit the shell
         }
-    }
+
+        else if (strcmp(user_input, "") == 0){
+        }
+        else {
+                pid_t pid = fork();
+                if (pid == -1) { // If error in the creation in the son process
+                perror("fork");
+                exit(EXIT_FAILURE);
+                } 
+                else if (pid == 0) {
+                    execl("/bin/sh", "sh", "-c", user_input, NULL);
+            
+                    perror("execl"); // if there is an error
+                    exit(EXIT_FAILURE);
+                } 
+                else {
+                    waitpid(pid, NULL, 0);
+                }
+            }
+            putchar(end);
+        }
     return 0;
+}
+
+char *displayreturn(int signal_number) {
+    char display[10];
+    if (signal_number == 0) {
+        display="exit:0";
+    } 
+    else {
+        display="sign:"+signal_number;
+    }
+    return &display[0];
 }
