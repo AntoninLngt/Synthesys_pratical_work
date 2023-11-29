@@ -18,9 +18,6 @@ int main() {
         user_input[strcspn(user_input, "\n")] = '\0'; // To suppress the caractère \n
 
         if (strcmp(user_input, "exit") == 0) {
-            const char *message_exit="Bye bye ...\n";
-            size_t message_exit_length = strlen(message_exit);
-            write(STDOUT_FILENO, message_exit, message_exit_length);
             break;  // Leave the while loop to be able to quit the shell
         }
         else if (strcmp(user_input, "fortune") == 0){
