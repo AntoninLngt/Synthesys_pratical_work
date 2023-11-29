@@ -13,7 +13,6 @@ int main() {
     write(STDOUT_FILENO, message_Welcome, message_Welcome_length);
 
     while (1) {
-        int end;
         write(STDOUT_FILENO, "enseash % ", strlen ("enseash % "));
         fgets(user_input, sizeof(user_input), stdin); // To save the anwers from the user
         user_input[strcspn(user_input, "\n")] = '\0'; // To suppress the caracter \n
@@ -26,7 +25,7 @@ int main() {
             break;  // Leave the while loop to be able to quit the shell
         }
 
-        else if ((end = getchar()) == EOF) {
+        else if ((getchar()) == EOF) {
             const char *message_Exit = "Bye bye...\n";
             size_t message_Exit_length = strlen(message_Exit); 
             write(STDOUT_FILENO, message_Exit, message_Exit_length);
