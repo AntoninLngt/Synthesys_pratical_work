@@ -72,3 +72,4 @@ int main() {
             putchar('\n'); // Print a newline character after each command
         }
     }
+}
