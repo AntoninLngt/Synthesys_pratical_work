@@ -15,3 +15,4 @@ indent:
 	indent -linux -i4 -nut -ts2 *.c
 
 .PHONY: all clean indent
+#make -f Makefile 

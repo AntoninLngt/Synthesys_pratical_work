@@ -22,7 +22,7 @@ int main() {
         }
 
         if (bytesRead == 0) {
-            const char *message_Exit = "Bye bye...\n";
+            const char *message_Exit = "\nBye bye...\n";
             size_t message_Exit_length = strlen(message_Exit);
             write(STDOUT_FILENO, message_Exit, message_Exit_length);
             break;
