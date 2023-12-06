@@ -14,8 +14,12 @@ int main() {
 
     while (1) {
         write(STDOUT_FILENO, "enseash % ", strlen ("enseash % "));
-        fgets(user_input, sizeof(user_input), stdin); // To save the anwers from the user
-        user_input[strcspn(user_input, "\n")] = '\0'; // To suppress the caracter \n
+        ssize_t bytesRead = read(STDIN_FILENO, user_input, sizeof(user_input));
+        if (bytesRead == -1) {
+            perror("read");
+            exit(EXIT_FAILURE);
+        }
+        user_input[bytesRead - 1] = '\0';
 
         if (strcmp(user_input, "exit") == 0) {
             break;  // Leave the while loop to be able to quit the shell
