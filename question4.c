@@ -6,15 +6,34 @@
 
 #define MAX_INPUT_SIZE 256
 
+char *displayreturn(int signal_number) {
+    char *display = (char *)malloc(20);
+    if (signal_number==-1){
+        sprintf(display,"enseash");
+    }
+    else if (signal_number == 0) {
+        sprintf(display,"enseash [exit:0]");
+    } 
+    else {
+        sprintf(display,"enseash [sign:%i]",signal_number);
+    }
+    return display;
+}
+
+
 int main() {
     char user_input[MAX_INPUT_SIZE];
     const char *message_Welcome = "Welcome to ENSEA Tiny Shell. \nType 'exit' to quit. \n";
     size_t message_Welcome_length = strlen(message_Welcome);
     write(STDOUT_FILENO, message_Welcome, message_Welcome_length);
+    int signal_number = -1 ;
+    int status;
+
 
     while (1) {
-        write(STDOUT_FILENO, "enseash % ", strlen("enseash % "));
-        
+        char *display=displayreturn(signal_number);
+        write(STDOUT_FILENO, display, strlen(display));
+        write(STDOUT_FILENO," % ",strlen(" % "));
         ssize_t bytesRead = read(STDIN_FILENO, user_input, sizeof(user_input));
         if (bytesRead == -1) {
             perror("read");
@@ -22,7 +41,7 @@ int main() {
         }
 
         if (bytesRead == 0) {
-            const char *message_Exit = "Bye bye...\n";
+            const char *message_Exit = "\nBye bye...\n";
             size_t message_Exit_length = strlen(message_Exit);
             write(STDOUT_FILENO, message_Exit, message_Exit_length);
             break;
@@ -47,23 +66,9 @@ int main() {
                 perror("execl");
                 exit(EXIT_FAILURE);
             } else {
-                waitpid(pid, NULL, 0);
+                waitpid(pid, &status, 0);
+                signal_number = WEXITSTATUS(status);
             }
             putchar('\n'); // Print a newline character after each command
         }
     }
-
-    return 0;
-}
-
-
-char *displayreturn(int signal_number) {
-    char display[10];
-    if (signal_number == 0) {
-        display="exit:0";
-    } 
-    else {
-        display="sign:"+signal_number;
-    }
-    return &display[0];
-}
