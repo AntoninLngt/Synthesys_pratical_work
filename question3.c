@@ -31,7 +31,7 @@ int main() {
         user_input[bytesRead - 1] = '\0'; // Remove the newline character
 
         if (strcmp(user_input, "exit") == 0) {
-            const char *message_Exit = "Bye bye...\n";
+            const char *message_Exit = "\nBye bye...\n";
             size_t message_Exit_length = strlen(message_Exit);
             write(STDOUT_FILENO, message_Exit, message_Exit_length);
             break;

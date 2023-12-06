@@ -62,12 +62,22 @@ int main() {
                 perror("fork");
                 exit(EXIT_FAILURE);
             } else if (pid == 0) {
+                sleep(30);
                 execl("/bin/sh", "sh", "-c", user_input, NULL);
                 perror("execl");
                 exit(EXIT_FAILURE);
             } else {
+                char pid_message[50];
+                sprintf(pid_message, "Le PID du processus en cours est : %d\n", pid);
+                size_t pid_message_length = strlen(pid_message);
+                write(STDOUT_FILENO, pid_message, pid_message_length);
                 waitpid(pid, &status, 0);
-                signal_number = WEXITSTATUS(status);
+                if (WIFEXITED(status)){
+                    signal_number = WEXITSTATUS(status);
+                }else if (WIFSIGNALED(status)){
+                    signal_number = WTERMSIG(status);
+                }
+                
             }
             putchar('\n'); // Print a newline character after each command
         }
