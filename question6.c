@@ -22,7 +22,7 @@ int main() {
         }
 
         if (bytesRead == 0) {
-            const char *message_Exit = "Bye bye...\n";
+            const char *message_Exit = "\nBye bye...\n";
             size_t message_Exit_length = strlen(message_Exit);
             write(STDOUT_FILENO, message_Exit, message_Exit_length);
             break;
@@ -35,11 +35,9 @@ int main() {
             size_t message_Exit_length = strlen(message_Exit);
             write(STDOUT_FILENO, message_Exit, message_Exit_length);
             break;
-        } 
-        else if (strcmp(user_input, "") == 0) {
+        } else if (strcmp(user_input, "") == 0) {
             // Do nothing for an empty input
-        } 
-        else {
+        } else {
             pid_t pid = fork();
             if (pid == -1) {
                 perror("fork");
