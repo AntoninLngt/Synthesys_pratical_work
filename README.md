@@ -31,13 +31,23 @@ Now, the response time is also displayed.
 ### The getttftp file
 
 Note for the RRQ packages:
-The RRQ packages is made of several fields: 
-    Opcode : Opcode field of TFTP RRQ (Read Request) packet is 16-bits in length. TFTP RRQ packets have an opcode of "1".
+The RRQ packages is made of several fields:
++-------+---~~---+---+---~~---+---+---~~---+---+---~~---+---+
+|  opc  |filename| 0 |  mode  | 0 | blksize| 0 | #octets| 0 |
++-------+---~~---+---+---~~---+---+---~~---+---+---~~---+---+
 
-    Filename : The TFTP RRQ (Read Request) packet has a file name, which is name of the file requested. File name is string of variable size. File name is a sequence of ASCII (American Standard Code for Information Interchange) bytes.
+* opc
+The opcode field contains either a 1, for Read Requests, or 2, for Write Requests.
+* filename
+The name of the file to be read or written, as defined in [1].
 
-    All 0s : Filename is terminated by a byte of all zeros. Since the filename field is variable in length, a byte of all 0s indicates the end of filename.
+* mode
+The mode of the file transfer: "netascii", "octet", or "mail".
 
-    Mode : Mode is another variable length field in TFTP RRQ packet. Mode field contains information about the data transfer mode. Three modes of data transfer are netascii (file is transferred as lines of characters for an ASCII file, each terminated by a carriage return), octet (raw 8-bits) and mail (for sending files to an email address).
+* blksize
+The Blocksize option, "blksize" (case in-sensitive).
 
-    The end of TFTP RRQ packets is with a `\0`.
+* octets
+The number of octets in a block, specified in ASCII. Valid values range between "8" and "65464" octets, inclusive. The blocksize refers to the number of data octets; it does not include the four octets of TFTP header.
+
+* The end of TFTP RRQ packets is with a `\0`.
