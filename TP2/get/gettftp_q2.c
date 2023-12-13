@@ -8,11 +8,17 @@
 
 int main(int argc, char *argv[ ]) {
 
+        char *host;
+    char *file;
     if (argc==3){
-        char *host = argv[1];
-        char *file = argv[2];
+        host = argv[1];
+        file = argv[2];
         printf("host = %s\n",host);
         printf("file = %s\n",file);
+    }
+    else{
+        fprintf(stderr, "Usage: %s <host> <file>\n", argv[0]);
+        exit(EXIT_FAILURE);
     }
 
     int s;
@@ -21,7 +27,7 @@ int main(int argc, char *argv[ ]) {
     struct addrinfo *res;
 
     // use of getnameinfo to get the name and adress of the host and the server
-    s = getaddrinfo(argv[1],NULL, &hints, &res);
+    s = getaddrinfo(host,NULL, &hints, &res);
 
     //manage the error if there are no arguments or if the arguments are false
     if (s != 0) {

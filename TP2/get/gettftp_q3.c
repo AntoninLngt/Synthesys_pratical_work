@@ -9,11 +9,17 @@
 
 int main(int argc, char *argv[ ]) {
     //getting the arguments host and file
+    char *host;
+    char *file;
     if (argc==3){
-        char *host = argv[1];
-        char *file = argv[2];
+        host = argv[1];
+        file = argv[2];
         printf("host = %s\n",host);
         printf("file = %s\n",file);
+    }
+    else{
+        fprintf(stderr, "Usage: %s <host> <file>\n", argv[0]);
+        exit(EXIT_FAILURE);
     }
 
 

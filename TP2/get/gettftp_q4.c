@@ -17,8 +17,8 @@ int main(int argc, char *argv[ ]) {
         printf("host = %s\n",host);
         printf("file = %s\n",file);
     }
-    else {
-        printf("Missing argument for %s :<host> <file> \n", argv[0]);
+    else{
+        fprintf(stderr, "Usage: %s <host> <file>\n", argv[0]);
         exit(EXIT_FAILURE);
     }
 
