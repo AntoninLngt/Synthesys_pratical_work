@@ -8,12 +8,18 @@
 #include <unistd.h>
 
 int main(int argc, char *argv[ ]) {
+    char *host;
+    char *file;
     //getting the arguments host and file
     if (argc==3){
-        char *host = argv[1];
-        char *file = argv[2];
+        host = argv[1];
+        file = argv[2];
         printf("host = %s\n",host);
         printf("file = %s\n",file);
+    }
+    else {
+        printf("Missing argument for %s :<host> <file> \n", argv[0]);
+        exit(EXIT_FAILURE);
     }
 
 
@@ -23,7 +29,7 @@ int main(int argc, char *argv[ ]) {
     struct addrinfo *res;
 
     // use of getnameinfo to get the name and adress of the host
-    s = getaddrinfo(argv[1],NULL, &hints, &res);
+    s = getaddrinfo(host,NULL, &hints, &res);
 
     //manage the error if there are no arguments or if the arguments are false
     if (s != 0) {
@@ -34,7 +40,7 @@ int main(int argc, char *argv[ ]) {
     int sockfd = socket(res->ai_family,res-> ai_socktype, res-> ai_protocol);
     
 
-    //errors management
+    // errors management
     if (sockfd == -1) {
         perror("Erreur lors de la création du socket");
         freeaddrinfo(res);
@@ -44,13 +50,23 @@ int main(int argc, char *argv[ ]) {
     //make a connection
     connect(sockfd,res->ai_addr,res->ai_addrlen);
 
-    //errors management
+    // errors management
     if (connect(sockfd, res->ai_addr, res->ai_addrlen) == -1) {
         perror("Erreur lors de la connexion au serveur");
         close(sockfd);
         freeaddrinfo(res);
         exit(EXIT_FAILURE);
     }
+
+    // Envoyez une requête au serveur avec write
+    const char *request = "";
+    if (write(sockfd, request, strlen(request)) == -1) {
+        perror("write");
+        close(sockfd);
+        freeaddrinfo(res);
+        return 1;
+    }
+
 
 
 
