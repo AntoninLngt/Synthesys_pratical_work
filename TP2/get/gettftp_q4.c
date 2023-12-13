@@ -32,26 +32,29 @@ int main(int argc, char *argv[ ]) {
     }
     // make a socket
     int sockfd = socket(res->ai_family,res-> ai_socktype, res-> ai_protocol);
+    
 
     //errors management
     if (sockfd == -1) {
-        perror("Error during the creation of the socket");
+        perror("Erreur lors de la création du socket");
         freeaddrinfo(res);
         exit(EXIT_FAILURE);
     }
 
-    // connection to the server
-
+    //make a connection
     connect(sockfd,res->ai_addr,res->ai_addrlen);
-    // errors management
+
+    //errors management
     if (connect(sockfd, res->ai_addr, res->ai_addrlen) == -1) {
-        perror("Error during the connexion with the serveur");
+        perror("Erreur lors de la connexion au serveur");
         close(sockfd);
         freeaddrinfo(res);
         exit(EXIT_FAILURE);
     }
 
-    // Close the socket and we free the memory
+
+
+    // close the socket and we free the memory
     close(sockfd);
     freeaddrinfo(res);
 
