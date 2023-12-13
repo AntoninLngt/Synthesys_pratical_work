@@ -31,7 +31,8 @@ Now, the response time is also displayed.
 ### The getttftp file
 
 Note for the RRQ packages:
-The RRQ packages is made of several fields:  
+The RRQ packages is made of several fields: 
+ 
 |  opc  |filename| 0 |  mode  | 0 | blksize| 0 | #octets| 0 |  
 
 * opc  
