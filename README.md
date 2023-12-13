@@ -32,9 +32,9 @@ Now, the response time is also displayed.
 
 Note for the RRQ packages:
 The RRQ packages is made of several fields:
-+-------+---~~---+---+---~~---+---+---~~---+---+---~~---+---+
-|  opc  |filename| 0 |  mode  | 0 | blksize| 0 | #octets| 0 |
-+-------+---~~---+---+---~~---+---+---~~---+---+---~~---+---+
++-------+---~~---+---+---~~---+---+---~~---+---+---~~---+---+  
+|  opc  |filename| 0 |  mode  | 0 | blksize| 0 | #octets| 0 |  
++-------+---~~---+---+---~~---+---+---~~---+---+---~~---+---+  
 
 * opc
 The opcode field contains either a 1, for Read Requests, or 2, for Write Requests.
