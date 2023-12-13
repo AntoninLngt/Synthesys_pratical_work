@@ -3,8 +3,6 @@
 #include <string.h>
 #include <unistd.h>
 
-
-
 int gettftp(int argc, char *argv[ ]) {
     
 }
