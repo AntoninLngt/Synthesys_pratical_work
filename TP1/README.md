@@ -8,3 +8,4 @@ La fonction write a pour arguments: type de sortie (STDOUT_FILENO (1)ou STDIN_FI
 On a utilisé la fonction `strlen` pour récupérer la taille de nos messages.  
 
 Pour regarder si on tape exit pour quitter, on utilise `strcmp` pour analyser.  
+
