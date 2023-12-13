@@ -5,14 +5,24 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <unistd.h>
 
-int gettftp(int argc, char *argv[ ]) {
+int main(int argc, char *argv[ ]) {
+    //getting the arguments host and file
+    if (argc==3){
+        char *host = argv[1];
+        char *file = argv[2];
+        printf("host = %s\n",host);
+        printf("file = %s\n",file);
+    }
+
+
     int s;
     struct addrinfo hints;
     memset(&hints,0,sizeof(hints));
     struct addrinfo *res;
 
-    // use of getnameinfo to get the name and adress of the host and the server
+    // use of getnameinfo to get the name and adress of the host
     s = getaddrinfo(argv[1],NULL, &hints, &res);
 
     //manage the error if there are no arguments or if the arguments are false
@@ -20,24 +30,28 @@ int gettftp(int argc, char *argv[ ]) {
         printf("getaddrinfo: %s\n", gai_strerror(s));
         exit(EXIT_FAILURE);
     }
-
     // make a connection to the good server with socket and connect
     int sockfd = socket(res->ai_family,res-> ai_socktype, res-> ai_protocol);
-    connect(sockfd,res->ai_addr,sizeof(struct sockaddr));
+    connect(sockfd,res->ai_addr,res->ai_addrlen);
 
-    //error management
-    if (sockfd == -1) { 
+    //errors management
+    if (sockfd == -1) {
         perror("Erreur lors de la création du socket");
         freeaddrinfo(res);
         exit(EXIT_FAILURE);
     }
-    
-    if (connect(sockfd, (struct sockaddr *)server_addr, sizeof(*server_addr)) == -1) {
+
+    // connection to the server
+    if (connect(sockfd, res->ai_addr, res->ai_addrlen) == -1) {
         perror("Erreur lors de la connexion au serveur");
         close(sockfd);
         freeaddrinfo(res);
         exit(EXIT_FAILURE);
     }
+
+    // Close the socket and we free the memory
+    close(sockfd);
+    freeaddrinfo(res);
 
     return 0;
 }
