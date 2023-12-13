@@ -31,23 +31,21 @@ Now, the response time is also displayed.
 ### The getttftp file
 
 Note for the RRQ packages:
-The RRQ packages is made of several fields:
-+-------+---~~---+---+---~~---+---+---~~---+---+---~~---+---+  
+The RRQ packages is made of several fields:  
 |  opc  |filename| 0 |  mode  | 0 | blksize| 0 | #octets| 0 |  
-+-------+---~~---+---+---~~---+---+---~~---+---+---~~---+---+  
 
-* opc
+* opc  
 The opcode field contains either a 1, for Read Requests, or 2, for Write Requests.
-* filename
+* filename  
 The name of the file to be read or written, as defined in [1].
 
-* mode
+* mode  
 The mode of the file transfer: "netascii", "octet", or "mail".
 
-* blksize
+* blksize  
 The Blocksize option, "blksize" (case in-sensitive).
 
-* octets
+* octets  
 The number of octets in a block, specified in ASCII. Valid values range between "8" and "65464" octets, inclusive. The blocksize refers to the number of data octets; it does not include the four octets of TFTP header.
 
 * The end of TFTP RRQ packets is with a `\0`.
