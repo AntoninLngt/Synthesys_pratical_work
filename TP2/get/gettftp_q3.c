@@ -46,17 +46,6 @@ int main(int argc, char *argv[ ]) {
         exit(EXIT_FAILURE);
     }
 
-    // connection to the server
-
-    connect(sockfd,res->ai_addr,res->ai_addrlen);
-    // errors management
-    if (connect(sockfd, res->ai_addr, res->ai_addrlen) == -1) {
-        perror("Error during the connexion with the serveur");
-        close(sockfd);
-        freeaddrinfo(res);
-        exit(EXIT_FAILURE);
-    }
-
     // Close the socket and we free the memory
     close(sockfd);
     freeaddrinfo(res);

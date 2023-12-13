@@ -6,9 +6,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-int main(int argc, char *argv[ ]) {
-
-        char *host;
+int main(int argc, char *argv[ ]) { 
+    char *host;
     char *file;
     if (argc==3){
         host = argv[1];
@@ -37,3 +36,4 @@ int main(int argc, char *argv[ ]) {
 
     return 0;
 }
+
