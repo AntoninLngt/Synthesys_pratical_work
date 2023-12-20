@@ -22,6 +22,7 @@ void build_wrq_packet(char *filename, char *mode, char *wrq_packet) {
     wrq_packet[sizeof(opcode) + strlen(filename)] = '\0';
     // Use strncpy for mode, including null-terminator
     strncpy(wrq_packet + sizeof(opcode) + strlen(filename) + 1, mode, strlen(mode) + 1);
+    
 }
 
 // Function to send data packet and receive acknowledgment
@@ -41,6 +42,7 @@ int send_data_packet(int sockfd, struct sockaddr *server_addr, socklen_t addr_le
 
     // Wait for acknowledgment
     char ack_packet[4];
+    printf(recvfrom(sockfd, ack_packet, sizeof(ack_packet), 0, server_addr, &addr_len));
     if (recvfrom(sockfd, ack_packet, sizeof(ack_packet), 0, server_addr, &addr_len) == -1) {
         perror("Error receiving ACK");
         return -1;
@@ -53,7 +55,6 @@ int send_data_packet(int sockfd, struct sockaddr *server_addr, socklen_t addr_le
         fprintf(stderr, "Received ACK with unexpected block number\n");
         return -1;
     }
-
     return 0;
 }
 
@@ -117,7 +118,6 @@ int main(int argc, char *argv[]) {
 
     // Initialize block number for DATA packets
     int block_number = 1;
-
     size_t bytes_read;
 
     // Read the file and send data packets until the end of file
@@ -132,7 +132,6 @@ int main(int argc, char *argv[]) {
             freeaddrinfo(res);
             exit(EXIT_FAILURE);
         }
-
         block_number++;
     } while (bytes_read == MAX_DATA_SIZE);
 
