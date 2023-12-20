@@ -37,6 +37,7 @@ The RRQ packages is made of several fields:
 
 * opc  
 The opcode field contains either a 1, for Read Requests, or 2, for Write Requests.
+
 * filename  
 The name of the file to be read or written.
 
