@@ -8,6 +8,8 @@
 #include <unistd.h>
 #include <arpa/inet.h>
 
+#define MAX_DATA_SIZE 512
+
 // Function to build RRQ packet
 void build_rrq_packet(char *filename, char *mode, char *rrq_packet) {
     // Opcode 1 for RRQ
@@ -21,6 +23,14 @@ void build_rrq_packet(char *filename, char *mode, char *rrq_packet) {
     // Use strncpy for mode, including null-terminator
     strncpy(rrq_packet + sizeof(opcode) + strlen(filename) + 1, mode, strlen(mode) + 1);
 }
+
+// Function to build ACK packet
+void build_ack_packet(short block_number, char *ack_packet) {
+    short opcode = htons(4); // Opcode 4 for ACK
+    memcpy(ack_packet, &opcode, sizeof(opcode));
+    memcpy(ack_packet + sizeof(opcode), &block_number, sizeof(block_number));
+}
+
 
 int main(int argc, char *argv[]) {
     char *host;
@@ -72,6 +82,44 @@ int main(int argc, char *argv[]) {
         freeaddrinfo(res);
         exit(EXIT_FAILURE);
     }
+
+    // Receive DAT packet
+    char dat_packet[MAX_DATA_SIZE + 4]; // 4 bytes for opcode and block number
+    ssize_t bytes_received = recvfrom(sockfd, dat_packet, sizeof(dat_packet), 0, NULL, NULL);
+
+    if (bytes_received == -1) {
+        perror("Error receiving DAT packet");
+        close(sockfd);
+        freeaddrinfo(res);
+        exit(EXIT_FAILURE);
+    }
+
+    // Extract opcode and block number from the DAT packet
+    short opcode, block_number;
+    memcpy(&opcode, dat_packet, sizeof(opcode));
+    memcpy(&block_number, dat_packet + sizeof(opcode), sizeof(block_number));
+
+    if (ntohs(opcode) == 3) { // Check if it's a Data (DAT) packet
+        // Process the received data (e.g., save it to a file)
+        printf("Received Data Packet with Block Number %d\n", ntohs(block_number));
+
+        // Build ACK packet
+        char ack_packet[4]; // 4 bytes for opcode and block number
+        build_ack_packet(block_number, ack_packet);
+
+        // Send ACK packet to the server
+        if (sendto(sockfd, ack_packet, sizeof(ack_packet), 0, res->ai_addr, res->ai_addrlen) == -1) {
+            perror("Error sending ACK packet");
+            close(sockfd);
+            freeaddrinfo(res);
+            exit(EXIT_FAILURE);
+        }
+
+        printf("Sent ACK for Block Number %d\n", ntohs(block_number));
+    } else {
+        printf("Received packet is not a Data (DAT) packet.\n");
+    }
+
 
     // close the socket and free the memory
     close(sockfd);

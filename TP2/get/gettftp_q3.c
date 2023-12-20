@@ -29,7 +29,7 @@ int main(int argc, char *argv[ ]) {
     struct addrinfo *res;
 
     // use of getnameinfo to get the name and adress of the host
-    s = getaddrinfo(argv[1],NULL, &hints, &res);
+    s = getaddrinfo(host,NULL, &hints, &res);
 
     //manage the error if there are no arguments or if the arguments are false
     if (s != 0) {
