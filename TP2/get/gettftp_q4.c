@@ -74,14 +74,19 @@ int main(int argc, char *argv[]) {
     // Build RRQ packet
     char rrq_packet[516]; // Maximum size for RRQ packet
     build_rrq_packet(file, "octet", rrq_packet);
+    
+    printf("Sending RRQ packet to the server...\n");
 
     // Send RRQ packet to the server
-    if (sendto(sockfd, rrq_packet, strlen(rrq_packet), 0, res->ai_addr, res->ai_addrlen) == -1) {
+    int res_send= sendto(sockfd, rrq_packet, strlen(rrq_packet), 0, res->ai_addr, res->ai_addrlen);
+    if (res_send ==-1) {
         perror("Error sending RRQ packet");
         close(sockfd);
         freeaddrinfo(res);
         exit(EXIT_FAILURE);
     }
+    printf("RRQ packet sent successfully.\n");
+    printf("Waiting for DATA packet...\n");
 
     // Receive DAT packet
     char dat_packet[MAX_DATA_SIZE + 4]; // 4 bytes for opcode and block number
@@ -92,32 +97,6 @@ int main(int argc, char *argv[]) {
         close(sockfd);
         freeaddrinfo(res);
         exit(EXIT_FAILURE);
-    }
-
-    // Extract opcode and block number from the DAT packet
-    short opcode, block_number;
-    memcpy(&opcode, dat_packet, sizeof(opcode));
-    memcpy(&block_number, dat_packet + sizeof(opcode), sizeof(block_number));
-
-    if (ntohs(opcode) == 3) { // Check if it's a Data (DAT) packet
-        // Process the received data (e.g., save it to a file)
-        printf("Received Data Packet with Block Number %d\n", ntohs(block_number));
-
-        // Build ACK packet
-        char ack_packet[4]; // 4 bytes for opcode and block number
-        build_ack_packet(block_number, ack_packet);
-
-        // Send ACK packet to the server
-        if (sendto(sockfd, ack_packet, sizeof(ack_packet), 0, res->ai_addr, res->ai_addrlen) == -1) {
-            perror("Error sending ACK packet");
-            close(sockfd);
-            freeaddrinfo(res);
-            exit(EXIT_FAILURE);
-        }
-
-        printf("Sent ACK for Block Number %d\n", ntohs(block_number));
-    } else {
-        printf("Received packet is not a Data (DAT) packet.\n");
     }
 
 
