@@ -106,6 +106,15 @@ int main(int argc, char *argv[]) {
         exit(EXIT_FAILURE);
     }
 
+    // Send WRQ packet to the server
+    if (sendto(sockfd, wrq_packet, strlen(wrq_packet), 0, res->ai_addr, res->ai_addrlen) == -1) {
+        perror("Error sending WRQ packet");
+        fclose(file_ptr);
+        close(sockfd);
+        freeaddrinfo(res);
+        exit(EXIT_FAILURE);
+    }
+
     // Initialize block number for DATA packets
     int block_number = 1;
 
@@ -130,18 +139,9 @@ int main(int argc, char *argv[]) {
     // Close the file
     fclose(file_ptr);
 
-    // Send WRQ packet to the server
-    if (sendto(sockfd, wrq_packet, strlen(wrq_packet), 0, res->ai_addr, res->ai_addrlen) == -1) {
-        perror("Error sending WRQ packet");
-        close(sockfd);
-        freeaddrinfo(res);
-        exit(EXIT_FAILURE);
-    }
-
     // close the socket and free the memory
     close(sockfd);
     freeaddrinfo(res);
 
     return 0;
 }
-   
