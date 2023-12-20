@@ -55,7 +55,7 @@ int main(int argc, char *argv[]) {
     hints.ai_socktype = SOCK_DGRAM; // Datagram socket for UDP
 
     // use of getaddrinfo to get the name and address of the host
-    s = getaddrinfo(host, "69", &hints, &res);
+    s = getaddrinfo(host, "1069", &hints, &res);
 
     // manage the error if there are no arguments or if the arguments are false
     if (s != 0) {
