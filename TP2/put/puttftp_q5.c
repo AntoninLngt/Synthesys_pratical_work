@@ -109,18 +109,23 @@ int main(int argc, char *argv[]) {
     // Initialize block number for DATA packets
     int block_number = 1;
 
-    // Read the file into a buffer
-    char data_buffer[MAX_DATA_SIZE];
-    size_t bytes_read = fread(data_buffer, 1, sizeof(data_buffer), file_ptr);
+    size_t bytes_read;
 
-    // Send the file data in one DATA packet
-    if (send_data_packet(sockfd, res->ai_addr, res->ai_addrlen, data_buffer, bytes_read, block_number) == -1) {
-        fprintf(stderr, "Error sending file data\n");
-        fclose(file_ptr);
-        close(sockfd);
-        freeaddrinfo(res);
-        exit(EXIT_FAILURE);
-    }
+    // Read the file and send data packets until the end of file
+    do {
+        char data_buffer[MAX_DATA_SIZE];
+        bytes_read = fread(data_buffer, 1, sizeof(data_buffer), file_ptr);
+
+        if (send_data_packet(sockfd, res->ai_addr, res->ai_addrlen, data_buffer, bytes_read, block_number) == -1) {
+            fprintf(stderr, "Error sending file data\n");
+            fclose(file_ptr);
+            close(sockfd);
+            freeaddrinfo(res);
+            exit(EXIT_FAILURE);
+        }
+
+        block_number++;
+    } while (bytes_read == MAX_DATA_SIZE);
 
     // Close the file
     fclose(file_ptr);
