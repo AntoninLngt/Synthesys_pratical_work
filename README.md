@@ -28,9 +28,8 @@ Now, the response time is also displayed.
 
 ## TP2
 
-### The getttftp file
 
-Note for the RRQ packages:
+Note for the RRQ packagesand WRQ packages:
 The RRQ packages is made of several fields: 
  
 |  opc  |filename| 0 |  mode  | 0 | blksize| 0 | #octets| 0 |  
@@ -51,3 +50,7 @@ The Blocksize option, "blksize" (case in-sensitive).
 The number of octets in a block, specified in ASCII. Valid values range between "8" and "65464" octets, inclusive. The blocksize refers to the number of data octets; it does not include the four octets of TFTP header.
 
 * The end of TFTP RRQ packets is with a `\0`.
+
+We don't need to connect the socket because we are doing an UDP Protocol so the only do a socket, sendTo and a recvfrom. In both of our programs, recvfrom doesn't run. We don't really know why but maybe it is because it isn't bind.  
+
+For multiple DATA packages, we need to do a loop in order to keep track with our packages.
